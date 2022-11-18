@@ -1,3 +1,5 @@
+import 'package:animal_app/view/Walk/WalkStartPage.dart';
+import 'package:animal_app/widget/DrawerItem.dart';
 import 'package:animal_app/widget/ScaffoldClass.dart';
 import 'package:flutter/material.dart';
 
@@ -7,17 +9,18 @@ Uzupelnic destynacje do Drawer - account activity etc
 Destynacja dzwonek, + , lupa
 */
 
-class Start extends StatefulWidget {
-  Start({Key? key}) : super(key: key);
+class UserStartPage extends StatefulWidget {
+  const UserStartPage({Key? key}) : super(key: key);
 
   @override
-  State<Start> createState() => _Start();
+  State<UserStartPage> createState() => _UserStartPage();
 }
 
-class _Start extends State<Start> {
+class _UserStartPage extends State<UserStartPage> {
   @override
   Widget build(BuildContext context) {
     return ScaffoldClass(
+      axis: MainAxisAlignment.spaceEvenly,
       children: [
         Container(
           width: MediaQuery.of(context).size.width,
@@ -44,7 +47,10 @@ class _Start extends State<Start> {
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
               GestureDetector(
-                onTap: () => print("_navigate(dest)"),
+                onTap: () => Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => const WalkStartPage())),
                 child: Container(
                   decoration: BoxDecoration(
                     color: Theme.of(context).focusColor,

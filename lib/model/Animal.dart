@@ -7,17 +7,17 @@ class Animal {
   String _name;
   String _description;
   DateTime _birth_date;
-  bool _sex;
-  Double _weight;
-  Double _height;
+  String _sex;
+  double _weight;
   String _image;
+  int id;
   // Pin pins;
   // Breed breed;
 
   // Constructor
 
-  Animal(this._name, this._description, this._birth_date, this._sex,
-      this._weight, this._height, this._image);
+  Animal(this.id, this._name, this._description, this._birth_date, this._sex,
+      this._weight, this._image);
 
   // Setters & Getters
 
@@ -31,18 +31,13 @@ class Animal {
     _image = image;
   }
 
-  Double get height => _height;
-  set height(Double height) {
-    _height = height;
-  }
-
-  Double get weight => _weight;
-  set weight(Double weight) {
+  double get weight => _weight;
+  set weight(double weight) {
     _weight = weight;
   }
 
-  bool get sex => _sex;
-  set sex(bool sex) {
+  String get sex => _sex;
+  set sex(String sex) {
     _sex = sex;
   }
 

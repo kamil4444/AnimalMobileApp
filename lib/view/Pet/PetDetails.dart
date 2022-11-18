@@ -1,3 +1,5 @@
+import 'package:animal_app/view/Pet/AddPet.dart';
+import 'package:animal_app/view/Pet/EditPet.dart';
 import 'package:flutter/material.dart';
 import '../../widget/ScaffoldClass.dart';
 
@@ -48,7 +50,8 @@ class _PetDetails extends State<PetDetails> {
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
               GestureDetector(
-                onTap: () => print("_navigate(dest)"),
+                onTap: () => Navigator.push(context,
+                    MaterialPageRoute(builder: ((context) => const EditPet()))),
                 child: Container(
                   decoration: BoxDecoration(
                     color: Theme.of(context).focusColor,

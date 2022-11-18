@@ -80,68 +80,71 @@ class _EditPet extends State<EditPet> {
         ),
       );
     }
-    return ScaffoldClass(children: [
-      GestureDetector(
-          onTap: () {
-            AlertDialog alert = AlertDialog(
-              content: Text(
-                'Ustaw swoje zdjęcie',
-                textAlign: TextAlign.center,
-                style: Theme.of(context).textTheme.headline3,
-              ),
-              actions: [
-                TextButton(
-                    style: ButtonStyle(
-                        alignment: Alignment.center,
-                        backgroundColor:
-                            MaterialStateProperty.all(Colors.blue)),
-                    onPressed: () {
-                      type = ImageSourceType.camera;
-                      Navigator.pop(context);
-                      pickImage();
-                    },
-                    child: Text(
-                      'Zrób teraz',
-                      style: Theme.of(context).textTheme.headline3,
-                    )),
-                TextButton(
-                    style: ButtonStyle(
-                        alignment: Alignment.center,
-                        backgroundColor:
-                            MaterialStateProperty.all(Colors.blue)),
-                    onPressed: () {
-                      type = ImageSourceType.gallery;
-                      Navigator.pop(context);
-                      pickImage();
-                    },
-                    child: Text(
-                      'Galeria',
-                      style: Theme.of(context).textTheme.headline3,
-                    ))
-              ],
-            );
-            showDialog(
-              context: context,
-              builder: (BuildContext context) {
-                return alert;
+    return ScaffoldClass(
+        appBarIcon: false,
+        appBarText: 'Edytuj dane _name',
+        children: [
+          GestureDetector(
+              onTap: () {
+                AlertDialog alert = AlertDialog(
+                  content: Text(
+                    'Ustaw swoje zdjęcie',
+                    textAlign: TextAlign.center,
+                    style: Theme.of(context).textTheme.headline3,
+                  ),
+                  actions: [
+                    TextButton(
+                        style: ButtonStyle(
+                            alignment: Alignment.center,
+                            backgroundColor:
+                                MaterialStateProperty.all(Colors.blue)),
+                        onPressed: () {
+                          type = ImageSourceType.camera;
+                          Navigator.pop(context);
+                          pickImage();
+                        },
+                        child: Text(
+                          'Zrób teraz',
+                          style: Theme.of(context).textTheme.headline3,
+                        )),
+                    TextButton(
+                        style: ButtonStyle(
+                            alignment: Alignment.center,
+                            backgroundColor:
+                                MaterialStateProperty.all(Colors.blue)),
+                        onPressed: () {
+                          type = ImageSourceType.gallery;
+                          Navigator.pop(context);
+                          pickImage();
+                        },
+                        child: Text(
+                          'Galeria',
+                          style: Theme.of(context).textTheme.headline3,
+                        ))
+                  ],
+                );
+                showDialog(
+                  context: context,
+                  builder: (BuildContext context) {
+                    return alert;
+                  },
+                );
               },
-            );
-          },
-          child: _image != null
-              ? Stack(alignment: Alignment.bottomRight, children: [
-                  CircleAvatar(
-                      backgroundImage: FileImage(_image),
-                      radius: MediaQuery.of(context).size.height * .1),
-                  const Icon(Icons.edit),
-                ])
-              : Image.asset('assets/user.png')),
-      Expanded(
-        child: SingleChildScrollView(
-          child: Column(
-            children: editableWidgets,
+              child: _image != null
+                  ? Stack(alignment: Alignment.bottomRight, children: [
+                      CircleAvatar(
+                          backgroundImage: FileImage(_image),
+                          radius: MediaQuery.of(context).size.height * .1),
+                      const Icon(Icons.edit),
+                    ])
+                  : Image.asset('assets/user.png')),
+          Expanded(
+            child: SingleChildScrollView(
+              child: Column(
+                children: editableWidgets,
+              ),
+            ),
           ),
-        ),
-      ),
-    ]);
+        ]);
   }
 }

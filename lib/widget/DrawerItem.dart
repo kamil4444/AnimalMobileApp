@@ -1,5 +1,5 @@
 import 'package:animal_app/view/User/UserAccount.dart';
-import 'package:animal_app/view/User/Start.dart';
+import 'package:animal_app/view/User/UserStartPage.dart';
 import 'package:flutter/material.dart';
 
 import '../main.dart';
@@ -14,16 +14,17 @@ class DrawerBar extends StatefulWidget {
   @override
   State<DrawerBar> createState() => _DrawerBar();
 
-  DrawerBar({Key? key}) : super(key: key);
+  const DrawerBar({Key? key}) : super(key: key);
 }
 
 class _DrawerBar extends State<DrawerBar> {
-  final int _index = 0;
+  int _index = -1;
+  bool _isDisabled = false;
   final _drawerItems = [
     DrawerItem("Account", Icons.account_circle_sharp),
     DrawerItem("Activity", Icons.directions_run_sharp),
-    DrawerItem("Chat", Icons.wechat_sharp),
-    DrawerItem("Friends", Icons.supervisor_account_sharp),
+    //DrawerItem("Chat", Icons.wechat_sharp),
+    //DrawerItem("Friends", Icons.supervisor_account_sharp),
     DrawerItem("Settings", Icons.settings_accessibility_sharp),
     DrawerItem("Information", Icons.info_outline_rounded),
     DrawerItem("Logout", Icons.logout_sharp),
@@ -61,12 +62,8 @@ class _DrawerBar extends State<DrawerBar> {
       case 4:
       //return Start();
 
-      // Information
-      case 5:
-      //return Start();
-
       // Logout
-      case 6:
+      case 5:
         return _navigateClearRoute(const StartPage()); //Login
 
       default:
@@ -83,9 +80,10 @@ class _DrawerBar extends State<DrawerBar> {
           padding: const EdgeInsets.fromLTRB(25, 0, 25, 15),
           child: Container(
               decoration: BoxDecoration(
+                color: _index == i ? Colors.yellow : Colors.transparent,
                 border: Border.all(width: 1),
                 borderRadius: BorderRadius.circular(
-                  45,
+                  15,
                 ),
               ),
               child: ListTile(
@@ -99,7 +97,16 @@ class _DrawerBar extends State<DrawerBar> {
                   color: Colors.black87,
                 ),
                 selected: i == _index,
-                onTap: () => _onSelectItem(i),
+                onTap: () {
+                  _index == i
+                      ? setState(() {
+                          _index = i;
+                        })
+                      : _onSelectItem(i);
+                  setState(() {
+                    _index = i;
+                  });
+                },
               ))));
     }
     return Padding(

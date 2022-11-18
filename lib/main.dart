@@ -1,5 +1,5 @@
 import 'package:animal_app/view/Login%20and%20Register/Register.dart';
-import 'package:animal_app/view/User/Start.dart';
+import 'package:animal_app/view/User/UserStartPage.dart';
 import 'package:flutter/material.dart';
 import 'package:json_theme/json_theme.dart';
 import 'package:flutter/services.dart'; // For rootBundle
@@ -34,7 +34,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      home: Start(),
+      home: UserStartPage(),
       theme: theme,
     );
   }
@@ -155,8 +155,9 @@ class _StartPage extends State<StartPage> {
                       Navigator.pushAndRemoveUntil(
                           context,
                           MaterialPageRoute(
-                              builder: (BuildContext context) => Start()),
-                          (route) => false);
+                              builder: (BuildContext context) =>
+                                  const UserStartPage()),
+                          (route) => true);
                     } else {
                       setState(() => _autoValidate = AutovalidateMode.always);
                     }

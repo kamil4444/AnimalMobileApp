@@ -6,8 +6,7 @@ import 'package:image_picker/image_picker.dart';
 enum ImageSourceType { gallery, camera }
 
 class ImagePickerClass extends StatefulWidget {
-  const ImagePickerClass({Key? key, required this.typ}) : super(key: key);
-  final String typ;
+  const ImagePickerClass({Key? key}) : super(key: key);
   @override
   State<StatefulWidget> createState() => _ImagePickerClass();
 }
@@ -34,49 +33,55 @@ class _ImagePickerClass extends State<ImagePickerClass> {
     setState(() {
       _image = File(image.path);
     });
+    print('----------------------------');
+    print(_image);
+    print('----------------------------');
   }
 
   // Building pop-up box to pick an image (from gallery or camera)
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-        onTap: (() => AlertDialog(
-              content: Text(
-                'Ustaw swoje zdjęcie',
-                textAlign: TextAlign.center,
-                style: Theme.of(context).textTheme.headline3,
+        onTap: (() => showDialog<String>(
+              context: context,
+              builder: (BuildContext context) => AlertDialog(
+                content: Text(
+                  'Ustaw swoje zdjęcie',
+                  textAlign: TextAlign.center,
+                  style: Theme.of(context).textTheme.headline3,
+                ),
+                actions: [
+                  TextButton(
+                      style: ButtonStyle(
+                          alignment: Alignment.center,
+                          backgroundColor:
+                              MaterialStateProperty.all(Colors.blue)),
+                      onPressed: () {
+                        type = ImageSourceType.camera;
+                        Navigator.pop(context);
+                        pickImage();
+                      },
+                      child: Text(
+                        'Zrób teraz',
+                        style: Theme.of(context).textTheme.headline3,
+                      )),
+                  TextButton(
+                      style: ButtonStyle(
+                          alignment: Alignment.center,
+                          backgroundColor:
+                              MaterialStateProperty.all(Colors.blue)),
+                      onPressed: () {
+                        type = ImageSourceType.gallery;
+                        Navigator.pop(context);
+                        pickImage();
+                      },
+                      child: Text(
+                        'Galeria',
+                        style: Theme.of(context).textTheme.headline3,
+                      ))
+                ],
               ),
-              actions: [
-                TextButton(
-                    style: ButtonStyle(
-                        alignment: Alignment.center,
-                        backgroundColor:
-                            MaterialStateProperty.all(Colors.blue)),
-                    onPressed: () {
-                      type = ImageSourceType.camera;
-                      Navigator.pop(context);
-                      pickImage();
-                    },
-                    child: Text(
-                      'Zrób teraz',
-                      style: Theme.of(context).textTheme.headline3,
-                    )),
-                TextButton(
-                    style: ButtonStyle(
-                        alignment: Alignment.center,
-                        backgroundColor:
-                            MaterialStateProperty.all(Colors.blue)),
-                    onPressed: () {
-                      type = ImageSourceType.gallery;
-                      Navigator.pop(context);
-                      pickImage();
-                    },
-                    child: Text(
-                      'Galeria',
-                      style: Theme.of(context).textTheme.headline3,
-                    ))
-              ],
-            )), //OnTap
+            )), //onTap
         child: _image != null
             ? Stack(alignment: Alignment.bottomRight, children: [
                 CircleAvatar(
@@ -84,6 +89,6 @@ class _ImagePickerClass extends State<ImagePickerClass> {
                     radius: MediaQuery.of(context).size.height * .1),
                 const Icon(Icons.edit),
               ])
-            : Image.asset(type));
+            : Image.asset('assets/Edit_Picture.png'));
   }
 }

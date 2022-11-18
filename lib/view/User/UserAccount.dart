@@ -18,39 +18,61 @@ class _UserAccount extends State<UserAccount> {
 
   @override
   Widget build(BuildContext context) {
-    return ScaffoldClass(
-      appBarIcon: true,
-      children: [
-        Container(
-          width: MediaQuery.of(context).size.width,
-          height: 150,
-          decoration: const BoxDecoration(
-            image: DecorationImage(
-              image: AssetImage('assets/Dog_training.png'),
-            ),
+    List<Widget> userOptions = [
+      Container(
+        width: MediaQuery.of(context).size.width,
+        height: 150,
+        decoration: const BoxDecoration(
+          image: DecorationImage(
+            image: AssetImage('assets/Dog_training.png'),
           ),
         ),
-        Padding(
-          padding: const EdgeInsets.fromLTRB(0, 0, 0, 20),
-          child: Center(
-            child: Text(
-              _userName,
-              style: Theme.of(context).textTheme.headline4,
-              textAlign: TextAlign.center,
-            ),
+      ),
+      Padding(
+        padding: const EdgeInsets.fromLTRB(0, 0, 0, 20),
+        child: Center(
+          child: Text(
+            _userName,
+            style: Theme.of(context).textTheme.headline4,
+            textAlign: TextAlign.center,
           ),
         ),
+      ),
+    ];
+    List<String> assets = [
+      'assets/Dog.png',
+      'assets/Happy.png',
+      'assets/Friends.png',
+      'assets/Eye.png',
+      'assets/Delete.png',
+    ];
+    List<String> textOptions = [
+      'Podopieczni',
+      'Mój profil',
+      'Znajomi',
+      'Zmiana hasła',
+      'Usunięcie konta',
+    ];
+    List<Widget> routeOptions = [
+      const MyPets(),
+      const UserEditableProfile(),
+      const MyPets(),
+      const PwdResetFinal(screen: false),
+      const UserDeleteAccount(),
+    ];
+    for (var i = 0; i < 5; i++) {
+      userOptions.add(
         Padding(
-          padding: const EdgeInsets.fromLTRB(15, 25, 15, 0),
+          padding: const EdgeInsets.fromLTRB(25, 25, 35, 0),
           child: GestureDetector(
             onTap: () => Navigator.push(context,
-                MaterialPageRoute(builder: (context) => const MyPets())),
+                MaterialPageRoute(builder: (context) => routeOptions[i])),
             child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
                 Container(
                   width: MediaQuery.of(context).size.width * 0.65,
-                  height: 50,
+                  height: 45,
                   decoration: const BoxDecoration(
                       border: Border(
                           bottom: BorderSide(
@@ -59,7 +81,7 @@ class _UserAccount extends State<UserAccount> {
                   child: Padding(
                     padding: const EdgeInsets.fromLTRB(20, 10, 0, 0),
                     child: Text(
-                      'My pets',
+                      textOptions[i],
                       style: Theme.of(context).textTheme.headline4,
                     ),
                   ),
@@ -67,169 +89,21 @@ class _UserAccount extends State<UserAccount> {
                 Container(
                   width: 50,
                   height: 50,
-                  decoration: const BoxDecoration(
+                  decoration: BoxDecoration(
                     image: DecorationImage(
-                        image: AssetImage('assets/Dog.png'), fit: BoxFit.fill),
+                        image: AssetImage(assets[i]), fit: BoxFit.fill),
                   ),
                 ),
               ],
             ),
           ),
         ),
-        Padding(
-          padding: const EdgeInsets.fromLTRB(15, 25, 15, 0),
-          child: GestureDetector(
-            onTap: () => Navigator.push(
-                context,
-                MaterialPageRoute(
-                    builder: (context) => const UserEditableProfile())),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Container(
-                  width: MediaQuery.of(context).size.width * 0.65,
-                  height: 50,
-                  decoration: const BoxDecoration(
-                      border: Border(
-                          bottom: BorderSide(
-                              width: 3,
-                              color: Color.fromARGB(174, 141, 90, 1)))),
-                  child: Padding(
-                    padding: const EdgeInsets.fromLTRB(20, 10, 0, 0),
-                    child: Text(
-                      'My profile',
-                      style: Theme.of(context).textTheme.headline4,
-                    ),
-                  ),
-                ),
-                Container(
-                  width: 50,
-                  height: 50,
-                  decoration: const BoxDecoration(
-                    image: DecorationImage(
-                        image: AssetImage('assets/Happy.png'),
-                        fit: BoxFit.fill),
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ),
-        Padding(
-          padding: const EdgeInsets.fromLTRB(15, 25, 15, 0),
-          child: GestureDetector(
-            onTap: () => print('To Dog profile'),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Container(
-                  width: MediaQuery.of(context).size.width * 0.65,
-                  height: 50,
-                  decoration: const BoxDecoration(
-                      border: Border(
-                          bottom: BorderSide(
-                              width: 3,
-                              color: Color.fromARGB(174, 141, 90, 1)))),
-                  child: Padding(
-                    padding: const EdgeInsets.fromLTRB(20, 10, 0, 0),
-                    child: Text(
-                      'Friends',
-                      style: Theme.of(context).textTheme.headline4,
-                    ),
-                  ),
-                ),
-                Container(
-                  width: 50,
-                  height: 50,
-                  decoration: const BoxDecoration(
-                    image: DecorationImage(
-                        image: AssetImage('assets/Friends.png'),
-                        fit: BoxFit.fill),
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ),
-        Padding(
-          padding: const EdgeInsets.fromLTRB(15, 25, 15, 0),
-          child: GestureDetector(
-            onTap: () => Navigator.push(
-                context,
-                MaterialPageRoute(
-                    // screen:false czyli przenosi na /account
-                    builder: (context) => const PwdResetFinal(screen: false))),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Container(
-                  width: MediaQuery.of(context).size.width * 0.65,
-                  height: 50,
-                  decoration: const BoxDecoration(
-                      border: Border(
-                          bottom: BorderSide(
-                              width: 3,
-                              color: Color.fromARGB(174, 141, 90, 1)))),
-                  child: Padding(
-                    padding: const EdgeInsets.fromLTRB(20, 10, 0, 0),
-                    child: Text(
-                      'Password change',
-                      style: Theme.of(context).textTheme.headline4,
-                    ),
-                  ),
-                ),
-                Container(
-                  width: 50,
-                  height: 50,
-                  decoration: const BoxDecoration(
-                    image: DecorationImage(
-                        image: AssetImage('assets/Eye.png'), fit: BoxFit.fill),
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ),
-        Padding(
-          padding: const EdgeInsets.fromLTRB(15, 25, 15, 0),
-          child: GestureDetector(
-            onTap: () => Navigator.push(
-                context,
-                MaterialPageRoute(
-                    builder: (context) => const UserDeleteAccount())),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Container(
-                  width: MediaQuery.of(context).size.width * 0.65,
-                  height: 50,
-                  decoration: const BoxDecoration(
-                      border: Border(
-                          bottom: BorderSide(
-                              width: 3,
-                              color: Color.fromARGB(174, 141, 90, 1)))),
-                  child: Padding(
-                    padding: const EdgeInsets.fromLTRB(20, 10, 0, 0),
-                    child: Text(
-                      'Usun konto',
-                      style: Theme.of(context).textTheme.headline4,
-                    ),
-                  ),
-                ),
-                SizedBox(
-                  width: 50,
-                  height: 50,
-                  child: Icon(
-                    Icons.delete_rounded,
-                    size: 50,
-                    color: Theme.of(context).textTheme.headline4!.color,
-                  ),
-                )
-              ],
-            ),
-          ),
-        ),
-      ],
-    );
+      );
+    }
+    return ScaffoldClass(
+        axis: MainAxisAlignment.center,
+        appBarText: 'Twoje konto',
+        appBarIcon: true,
+        children: userOptions);
   }
 }

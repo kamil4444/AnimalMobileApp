@@ -481,15 +481,18 @@ class _AddPet extends State<AddPet> {
                   child: Text('Podaj datę urodzin twojego pupila!'))
               : Text('datej'));
     }
-    return ScaffoldClass(appBarText: 'Dodaj nowego pupila', children: [
-      const ImagePickerClass(typ: 'assets/user.png'),
-      Expanded(
-        child: SingleChildScrollView(
-          child: Column(
-            children: editableWidgets,
+    return ScaffoldClass(
+        appBarText: 'Dodaj nowego pupila',
+        appBarIcon: false,
+        children: [
+          const ImagePickerClass(),
+          Expanded(
+            child: SingleChildScrollView(
+              child: Column(
+                children: editableWidgets,
+              ),
+            ),
           ),
-        ),
-      ),
-    ]);
+        ]);
   }
 }
