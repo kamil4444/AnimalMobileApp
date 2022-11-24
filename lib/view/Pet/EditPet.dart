@@ -81,6 +81,7 @@ class _EditPet extends State<EditPet> {
       );
     }
     return ScaffoldClass(
+        axis: true,
         appBarIcon: false,
         appBarText: 'Edytuj dane _name',
         children: [

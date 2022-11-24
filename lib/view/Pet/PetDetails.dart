@@ -15,6 +15,7 @@ class _PetDetails extends State<PetDetails> {
   Widget build(BuildContext context) {
     return ScaffoldClass(
       appBarIcon: false,
+      axis: true,
       children: [
         Container(
           height: 150,

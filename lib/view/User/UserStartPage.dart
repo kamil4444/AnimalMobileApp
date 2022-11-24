@@ -1,6 +1,7 @@
 import 'package:animal_app/view/Walk/WalkStartPage.dart';
 import 'package:animal_app/widget/DrawerItem.dart';
 import 'package:animal_app/widget/ScaffoldClass.dart';
+import 'package:animal_app/widget/TimerScreen.dart';
 import 'package:flutter/material.dart';
 
 /*
@@ -20,7 +21,7 @@ class _UserStartPage extends State<UserStartPage> {
   @override
   Widget build(BuildContext context) {
     return ScaffoldClass(
-      axis: MainAxisAlignment.spaceEvenly,
+      axis: true,
       children: [
         Container(
           width: MediaQuery.of(context).size.width,
@@ -71,6 +72,10 @@ class _UserStartPage extends State<UserStartPage> {
                 ),
               ),
               GestureDetector(
+                onTap: () => Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => CountUpTimerPage())),
                 child: Container(
                   decoration: BoxDecoration(
                     color: Theme.of(context).focusColor,

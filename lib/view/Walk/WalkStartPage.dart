@@ -2,22 +2,42 @@ import 'package:animal_app/view/Walk/WalkAdjustRoute.dart';
 import 'package:animal_app/widget/ScaffoldClass.dart';
 import 'package:flutter/material.dart';
 import 'package:slider_button/slider_button.dart';
-import 'package:slidable_button/slidable_button.dart';
 import '../../model/Animal.dart';
 import 'WalkScreen.dart';
+import 'package:permission_handler/permission_handler.dart';
 
 class WalkStartPage extends StatefulWidget {
   const WalkStartPage({Key? key}) : super(key: key);
-
   @override
   State<StatefulWidget> createState() => _WalkStartPage();
 }
 
 class _WalkStartPage extends State<WalkStartPage> {
+  Future<void> requestLocationPermission() async {
+    final serviceStatusLocation = await Permission.locationWhenInUse.isGranted;
+    bool isLocation = serviceStatusLocation == ServiceStatus.enabled;
+    final status = await Permission.locationWhenInUse.request();
+    if (status == PermissionStatus.granted) {
+      print('Permission Granted');
+    } else if (status == PermissionStatus.denied) {
+      requestLocationPermission();
+      print('Permission denied');
+    } else if (status == PermissionStatus.permanentlyDenied) {
+      print('Permission Permanently Denied');
+      await openAppSettings();
+    }
+  }
+
+  @override
+  void initState() {
+    requestLocationPermission();
+    super.initState();
+  }
+
   // biezremy data z db o spacerach
   bool? ograniczonyCzasSpaceru = false;
   bool? autodopasowanieTrasySpaceru = false;
-  int liczbaMinut = 10;
+  int liczbaMinut = 1;
   double containerHeight = .075;
 
   List<Animal> petList = [
@@ -82,6 +102,9 @@ class _WalkStartPage extends State<WalkStartPage> {
   @override
   Widget build(BuildContext context) {
     List<Widget> walk = [
+      ElevatedButton(
+          onPressed: requestLocationPermission,
+          child: Text('Request location')),
       SizedBox(
           width: double.infinity,
           height: MediaQuery.of(context).size.height * .35,
@@ -258,7 +281,6 @@ class _WalkStartPage extends State<WalkStartPage> {
             if (passAnimals.isEmpty) {
               // brak zaznaczonych zwierzat - nie mozemy przejsc dalej
               _scaleDialog();
-              print('Brak zwierzat!');
             } else {
               if (autodopasowanieTrasySpaceru == true) {
                 if (ograniczonyCzasSpaceru == true) {
@@ -317,7 +339,7 @@ class _WalkStartPage extends State<WalkStartPage> {
     ];
     return ScaffoldClass(
         key: UniqueKey(),
-        axis: MainAxisAlignment.spaceEvenly,
+        axis: true,
         appBarIcon: false,
         appBarText: 'Rozpocznij spacer',
         children: walk);

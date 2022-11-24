@@ -4,13 +4,17 @@ import 'package:flutter/material.dart';
 
 class ScaffoldClass extends StatelessWidget {
   const ScaffoldClass(
-      {Key? key, required this.children, this.appBarText, this.appBarIcon, this.axis})
+      {Key? key,
+      required this.children,
+      this.appBarText,
+      this.appBarIcon,
+      required this.axis})
       : super(key: key);
 
   final List<Widget> children;
   final String? appBarText;
   final bool? appBarIcon;
-  final MainAxisAlignment? axis;
+  final bool? axis;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -32,6 +36,7 @@ class ScaffoldClass extends StatelessWidget {
                         icon: const Icon(Icons.arrow_back),
                         onPressed: () => Navigator.pop(context),
                       )),
+        /*
         bottomNavigationBar: BottomNavigationBar(
             backgroundColor: Theme.of(context).bottomAppBarColor,
             items: <BottomNavigationBarItem>[
@@ -60,7 +65,13 @@ class ScaffoldClass extends StatelessWidget {
                 label: 'Home',
               ),
             ]),
+        */
         endDrawer: const DrawerBar(),
-        body: Column(mainAxisAlignment: axis!, children: children));
+        body: !axis!
+            ? Column(children: children)
+            : Column(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: children,
+              ));
   }
 }

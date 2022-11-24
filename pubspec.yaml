@@ -43,7 +43,18 @@ dependencies:
   image_slider: ^1.0.2
   slider_button: ^2.0.0
   slidable_button: ^2.0.0+1
-
+  google_maps_flutter: ^2.2.1
+  permission_handler: ^10.2.0
+  android_intent: ^2.0.2
+  geolocator: ^9.0.2
+  stop_watch_timer:
+  sliding_up_panel: ^2.0.0+1
+  flutter_polyline_points: ^1.0.0
+  location: ^4.4.0
+  google_maps_webservice: ^0.0.20-nullsafety.5
+  flutter_google_places_hoc081098: ^1.0.0-nullsafety.5
+  google_api_headers: ^1.1.1
+  connectivity_plus: ^3.0.2
 dev_dependencies:
   flutter_test:
     sdk: flutter

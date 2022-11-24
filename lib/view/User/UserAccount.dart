@@ -101,8 +101,7 @@ class _UserAccount extends State<UserAccount> {
       );
     }
     return ScaffoldClass(
-        axis: MainAxisAlignment.center,
-        appBarText: 'Twoje konto',
+        axis: true,
         appBarIcon: true,
         children: userOptions);
   }

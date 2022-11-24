@@ -79,7 +79,9 @@ class _UserEditableProfile extends State<UserEditableProfile> {
         ),
       );
     }
-    return ScaffoldClass(children: [
+    return ScaffoldClass(
+      axis: true,
+      children: [
       GestureDetector(
           onTap: () {
             AlertDialog alert = AlertDialog(

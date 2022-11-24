@@ -13,6 +13,7 @@ class _MyPets extends State<MyPets> {
   @override
   Widget build(BuildContext context) {
     return ScaffoldClass(
+      axis: true,
       appBarIcon: false,
       appBarText: 'Podopieczni',
       children: [

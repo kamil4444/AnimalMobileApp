@@ -484,6 +484,7 @@ class _AddPet extends State<AddPet> {
     return ScaffoldClass(
         appBarText: 'Dodaj nowego pupila',
         appBarIcon: false,
+        axis: true,
         children: [
           const ImagePickerClass(),
           Expanded(
