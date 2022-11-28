@@ -72,10 +72,6 @@ class _UserStartPage extends State<UserStartPage> {
                 ),
               ),
               GestureDetector(
-                onTap: () => Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => CountUpTimerPage())),
                 child: Container(
                   decoration: BoxDecoration(
                     color: Theme.of(context).focusColor,

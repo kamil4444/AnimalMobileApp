@@ -18,6 +18,8 @@ class ScaffoldClass extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+        resizeToAvoidBottomInset:
+         false,
         backgroundColor: Theme.of(context).scaffoldBackgroundColor,
         appBar: AppBar(
             iconTheme: Theme.of(context).iconTheme,

@@ -325,7 +325,9 @@ class _WalkStartPage extends State<WalkStartPage> {
             setState(() {});
           },
           label: Text(
-            'Zacznij spacer >>>',
+            autodopasowanieTrasySpaceru!
+                ? 'Przejdź Dalej>>>'
+                : 'Zacznij spacer >>>',
             style: Theme.of(context).textTheme.headline3,
             textAlign: TextAlign.center,
           ),

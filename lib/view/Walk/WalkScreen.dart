@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:math' show cos, sqrt, asin;
 import 'package:animal_app/view/Walk/AddPin.dart';
+import 'package:animal_app/widget/TimerScreen.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -11,10 +12,15 @@ import 'package:sliding_up_panel/sliding_up_panel.dart';
 import 'package:stop_watch_timer/stop_watch_timer.dart';
 
 class WalkScreen extends StatefulWidget {
-  WalkScreen({Key? key, this.timeInMinutes, required this.animalId})
+  WalkScreen(
+      {Key? key,
+      this.timeInMinutes,
+      required this.animalId,
+      this.wayPointsFromWalkSettngs})
       : super(key: key);
   int? timeInMinutes;
   final List<int> animalId;
+  Map<String, LatLng>? wayPointsFromWalkSettngs;
   @override
   State<StatefulWidget> createState() => _WalkScreen();
 }
@@ -23,11 +29,14 @@ class _WalkScreen extends State<WalkScreen> {
   // obecna lokacja do zmiennei -> 1 s czekania -> lokacja po 1 s do zmiennej
   //. then rysuj linie, obliczaj dystans, dodawaj linie do mapy,
   // dodawaj dystans do mapy, updateuj coiny
-
+  List<PolylineWayPoint> waypoints = [];
+  List<LatLng> coords = [];
   // Polylines
   late PolylinePoints polylinePoints;
   List<LatLng> polylineCoords = [];
+  List<LatLng> polylineCoordsAdjustRoute = [];
   Map<PolylineId, Polyline> polylines = {};
+  bool adjustRoute = false;
 
   // Google Api & Positioning
   double distance = 0.0;
@@ -37,23 +46,32 @@ class _WalkScreen extends State<WalkScreen> {
   final CameraPosition _initialLocation =
       const CameraPosition(target: LatLng(0.0, 0.0));
 
-  Future<bool> _calculateDistance() async {
+  Future<bool> _calculateDistance(
+      double lat1, double lon1, double lat2, double lon2) async {
     try {
       double totalDistance = 0.0;
 
       // Calculating the total distance by adding the distance
       // between small segments
-      for (int i = 0; i < polylineCoords.length - 1; i++) {
-        totalDistance += _coordinateDistance(
-          polylineCoords[i].latitude,
-          polylineCoords[i].longitude,
-          polylineCoords[i + 1].latitude,
-          polylineCoords[i + 1].longitude,
-        );
+      if (adjustRoute) {
+        totalDistance = _coordinateDistance(lat1, lon1, lat2, lon2);
+      } else {
+        for (int i = 0; i < polylineCoords.length - 1; i++) {
+          totalDistance += _coordinateDistance(
+            polylineCoords[i].latitude,
+            polylineCoords[i].longitude,
+            polylineCoords[i + 1].latitude,
+            polylineCoords[i + 1].longitude,
+          );
+        }
       }
 
       setState(() {
-        distance = totalDistance;
+        if (adjustRoute) {
+          distance += totalDistance;
+        } else {
+          distance = totalDistance;
+        }
       });
 
       return true;
@@ -76,11 +94,28 @@ class _WalkScreen extends State<WalkScreen> {
 
   @override
   void initState() {
-    SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
+    SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
       statusBarColor: Colors.transparent,
     ));
     SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersiveSticky);
+
     _getCurrentLocation();
+    if (widget.wayPointsFromWalkSettngs != null) {
+      adjustRoute = true;
+      // dodaj pozycje poczatkowa do listy
+      widget.wayPointsFromWalkSettngs?.forEach((key, value) {
+        if (key != 'brak miejsca1' &&
+            key != 'brak miejsca2' &&
+            key != 'brak miejsca3') {
+          waypoints.add(PolylineWayPoint(location: key));
+        } else {
+          waypoints.add(PolylineWayPoint(location: ''));
+        } //  Polyline places - nazwy miejsc
+        coords.add(value); // LatLng tych miejsc
+      });
+    }
+    // jezeli A-B--> i 1.
+    print('\n.\n.\n.\n Waypoints => $waypoints .\n.\n.\n.\n Coords -> $coords');
     super.initState();
   }
 
@@ -152,6 +187,35 @@ class _WalkScreen extends State<WalkScreen> {
 
   bool petla = true;
   _updateMapAndValues() async {
+    // tworz markery kiedy coords jest inny niz latlng 0,0
+    for (var i = 0; i < coords.length; i++) {
+      if (coords[i] != const LatLng(0.0, 0.0)) {
+        _addDroppedMarker(coords[i], waypoints[i].location);
+      }
+    }
+    if (adjustRoute) {
+      if (coords[2] == const LatLng(0.0, 0.0)) {
+        // trasa A -> A
+        // trasa A -> A
+        setState(() {
+          _createPolylines(
+              _currentPosition.latitude,
+              _currentPosition.longitude,
+              _currentPosition.latitude,
+              _currentPosition.longitude);
+        });
+      } else {
+        // trasa A -> B
+        setState(() {
+          _createPolylines(
+              _currentPosition.latitude,
+              _currentPosition.longitude,
+              coords[2].latitude,
+              coords[2].longitude);
+        });
+      }
+    }
+
     if (widget.timeInMinutes != null) {
       while (petla) {
         print(
@@ -169,8 +233,18 @@ class _WalkScreen extends State<WalkScreen> {
           print("if $_currentPosition != $position");
           if (_currentPosition.latitude != position.latitude &&
               _currentPosition.longitude != position.longitude) {
-            _createPolylines(_currentPosition, position);
-            await _calculateDistance();
+            if (!adjustRoute) {
+              _createPolylines(
+                  _currentPosition.latitude,
+                  _currentPosition.longitude,
+                  position.latitude,
+                  position.longitude);
+            }
+            await _calculateDistance(
+                _currentPosition.latitude,
+                _currentPosition.longitude,
+                position.latitude,
+                position.longitude);
             setState(() {
               _currentPosition = position;
               int result = distance * 1000 ~/ 50;
@@ -197,12 +271,21 @@ class _WalkScreen extends State<WalkScreen> {
           print("if $_currentPosition != $position");
           if (_currentPosition.latitude != position.latitude &&
               _currentPosition.longitude != position.longitude) {
-            _createPolylines(_currentPosition, position);
-            await _calculateDistance();
+            if (!adjustRoute) {
+              _createPolylines(
+                  _currentPosition.latitude,
+                  _currentPosition.longitude,
+                  position.latitude,
+                  position.longitude);
+            }
+            await _calculateDistance(
+                _currentPosition.latitude,
+                _currentPosition.longitude,
+                position.latitude,
+                position.longitude);
             setState(() {
               _currentPosition = position;
               int result = distance * 1000 ~/ 50;
-              // print('DYSTANS ILE COINOW : $result');
               if (result > 0) {
                 while (coins < result) {
                   setState(
@@ -219,28 +302,32 @@ class _WalkScreen extends State<WalkScreen> {
     }
   }
 
-  _createPolylines(Position start, Position end) async {
+  _createPolylines(
+      double startLat, double startLng, double endLat, double endLng) async {
     polylinePoints = PolylinePoints();
     PolylineResult result = await polylinePoints.getRouteBetweenCoordinates(
-      'AIzaSyDDyBb0N9_jthBS99PRJcT6CjFV2TI9J5E',
-      PointLatLng(start.latitude, start.longitude),
-      PointLatLng(end.latitude, end.longitude),
-      travelMode: TravelMode.walking,
-    );
-    if (result.points.isNotEmpty) {
+        'AIzaSyDDyBb0N9_jthBS99PRJcT6CjFV2TI9J5E',
+        PointLatLng(startLat, startLng),
+        PointLatLng(endLat, endLng),
+        travelMode: TravelMode.bicycling,
+        wayPoints: adjustRoute ? waypoints : []);
+
+    if (adjustRoute) {
+      result.points.forEach((PointLatLng point) {
+        polylineCoords.add(LatLng(point.latitude, point.longitude));
+      });
+    } else if (result.points.isNotEmpty) {
       polylineCoords.add(
           LatLng(result.points.last.latitude, result.points.last.longitude));
-
-      //print('--------WYSWIETLAM: $polylineCoords');
     }
 
     PolylineId id = const PolylineId('poly');
 
     Polyline polyline = Polyline(
       polylineId: id,
-      color: Colors.red,
+      color: Colors.green,
       points: polylineCoords,
-      width: 5,
+      width: 3,
     );
 
     polylines[id] = polyline;
@@ -261,7 +348,14 @@ class _WalkScreen extends State<WalkScreen> {
         position: pos,
         infoWindow: InfoWindow(title: nazwa));
 
-    markers.add(marker);
+    setState(() => markers.add(marker));
+  }
+
+  @override
+  void dispose() async {
+    super.dispose();
+    await stopWatchTimer.dispose();
+    mapController.dispose();
   }
 
   // markers end
@@ -488,9 +582,17 @@ class _WalkScreen extends State<WalkScreen> {
                                         await mapController.takeSnapshot();
                                     setState(() {
                                       _image = image;
+
                                       polylineCoords.clear();
                                       petla = false;
                                     });
+                                    print('\n Lista \n $image');
+                                    Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: ((context) =>
+                                                CountUpTimerPage(
+                                                    image: _image))));
                                   },
                                   style: ElevatedButton.styleFrom(
                                       backgroundColor:

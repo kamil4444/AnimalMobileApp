@@ -1,15 +1,11 @@
+import 'dart:typed_data';
+
 import 'package:flutter/material.dart';
 import 'package:stop_watch_timer/stop_watch_timer.dart';
 
 class CountUpTimerPage extends StatefulWidget {
-  static Future<void> navigatorPush(BuildContext context) async {
-    return Navigator.push<void>(
-      context,
-      MaterialPageRoute(
-        builder: (_) => CountUpTimerPage(),
-      ),
-    );
-  }
+  const CountUpTimerPage({Key? key, required this.image}) : super(key: key);
+  final Uint8List? image;
 
   @override
   _State createState() => _State();
@@ -105,6 +101,10 @@ class _State extends State<CountUpTimerPage> {
                               ),
                             ),
                           ]),
+
+                      Container(
+                        child: Image.memory(widget.image!),
+                      )
                     ]))),
       ),
     );
